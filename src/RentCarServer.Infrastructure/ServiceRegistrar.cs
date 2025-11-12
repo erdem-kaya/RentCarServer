@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using GenericRepository;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using RentCarServer.Infrastructure.Context;
@@ -15,6 +16,9 @@ public static class ServiceRegistrar
             string con = configuration.GetConnectionString("SqlServer")!;
             options.UseSqlServer(con);
         });
+
+        services.AddScoped<IUnitOfWork>(provider => provider.GetRequiredService<ApplicationDbContext>());
+
         services.Scan(action => action
             .FromAssemblies(typeof(ServiceRegistrar).Assembly)
             .AddClasses(publicOnly: false)

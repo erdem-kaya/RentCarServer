@@ -1,15 +1,19 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using GenericRepository;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RentCarServer.Domain.Abstractions;
+using RentCarServer.Domain.Users;
 using System.Security.Claims;
 
 namespace RentCarServer.Infrastructure.Context;
 
 //Class is Internal to prevent direct access from Application layer
 //Class Internal çünkü Application katmanından doğrudan erişimi engellemek için
-internal sealed class ApplicationDbContext(DbContextOptions options) : DbContext(options)
+internal sealed class ApplicationDbContext(DbContextOptions options) : DbContext(options), IUnitOfWork
 {
+
+    public DbSet<User> Users { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
