@@ -9,6 +9,7 @@ public static class ServiceRegistrar
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
+        services.AddHttpContextAccessor();
         services.AddDbContext<ApplicationDbContext>(options =>
         {
             string con = configuration.GetConnectionString("SqlServer")!;
