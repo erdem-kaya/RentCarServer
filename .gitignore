@@ -4,3 +4,13 @@
 
 /src/WebAPI/appsettings.json
 /src/WebAPI/appsettings.Development.json
+# IDE
+.vs/
+.vscode/
+*.user
+*.suo
+
+# Build çıktıları
+**/bin/
+**/obj/
+**/out/
