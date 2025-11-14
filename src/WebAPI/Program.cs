@@ -50,7 +50,8 @@ app.UseCors(policy => policy
 app.UseExceptionHandler();
 app.UseAuthentication();
 app.UseAuthorization();
-app.MapControllers().RequireRateLimiting("fixed");
+app.MapControllers().RequireRateLimiting("fixed").RequireAuthorization();
 app.MapAuthEndpoint();
+app.MapGet("/", () => "hello world").RequireAuthorization();
 //await app.CreateFirstUser();
 app.Run();
