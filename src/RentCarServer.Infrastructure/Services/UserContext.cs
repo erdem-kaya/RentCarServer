@@ -7,7 +7,7 @@ internal sealed class UserContext(IHttpContextAccessor httpContextAccessor) : IU
 {
     public Guid GetUserId()
     {
-        var httpcontext = httpContextAccessor.HttpContext;
+        var httpcontext = httpContextAccessor.HttpContext ?? throw new ArgumentNullException("HttpContext is null");
         var claims = httpcontext?.User.Claims;
         string? userId = (claims?.FirstOrDefault(i => i.Type == ClaimTypes.NameIdentifier)?.Value) ?? throw new ArgumentNullException("User id is null");
         try
