@@ -13,13 +13,20 @@ builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddRateLimiter(configureOptions =>
 {
-    configureOptions.AddFixedWindowLimiter("Fixed", options =>
+    configureOptions.AddFixedWindowLimiter("fixed", options =>
     {
         options.PermitLimit = 100;
         options.QueueLimit = 100;
         options.Window = TimeSpan.FromSeconds(1);
         options.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
-        options.QueueLimit = 2;
+    });
+
+    configureOptions.AddFixedWindowLimiter("login-fixed", options =>
+    {
+        options.PermitLimit = 5;
+        options.QueueLimit = 1;
+        options.Window = TimeSpan.FromMinutes(1);
+        options.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
     });
 });
 
@@ -47,9 +54,10 @@ app.UseCors(policy => policy
     .AllowAnyHeader()
     .AllowAnyMethod()
     .SetPreflightMaxAge(TimeSpan.FromMinutes(10)));
-app.UseExceptionHandler();
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseRateLimiter();
+app.UseExceptionHandler();
 app.MapControllers().RequireRateLimiting("fixed").RequireAuthorization();
 app.MapAuthEndpoint();
 app.MapGet("/", () => "hello world").RequireAuthorization();
